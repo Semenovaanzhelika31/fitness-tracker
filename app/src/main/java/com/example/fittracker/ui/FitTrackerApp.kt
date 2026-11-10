@@ -10,11 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.fittracker.ui.navigation.AppNavHost
+import com.example.fittracker.ui.navigation.Screen
 import com.example.fittracker.ui.navigation.bottomNavItems
 
 /** Корневой composable: нижняя навигация + NavHost с экранами. */
@@ -22,15 +22,18 @@ import com.example.fittracker.ui.navigation.bottomNavItems
 fun FitTrackerApp() {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = backStackEntry?.destination
+    val currentRoute = backStackEntry?.destination?.route
 
     Scaffold(
         bottomBar = {
             NavigationBar {
                 bottomNavItems.forEach { screen ->
                     val title = stringResource(screen.titleRes)
+                    // Экран деталей тренировки относится к вкладке «История».
+                    val selected = currentRoute == screen.route ||
+                        (screen == Screen.History && currentRoute?.startsWith("workout/") == true)
                     NavigationBarItem(
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                        selected = selected,
                         onClick = {
                             navController.navigate(screen.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {

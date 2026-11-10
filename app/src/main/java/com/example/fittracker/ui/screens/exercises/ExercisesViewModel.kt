@@ -1,14 +1,26 @@
 package com.example.fittracker.ui.screens.exercises
 
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.fittracker.FitTrackerApplication
+import com.example.fittracker.data.model.Exercise
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-/** Состояние экрана списка упражнений (пока пустое, наполнится при подключении сети). */
-data class ExercisesUiState(val isLoading: Boolean = false)
+class ExercisesViewModel(app: Application) : AndroidViewModel(app) {
+    private val repository = (app as FitTrackerApplication).repository
 
-class ExercisesViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(ExercisesUiState())
-    val uiState: StateFlow<ExercisesUiState> = _uiState.asStateFlow()
+    val exercises: StateFlow<List<Exercise>> = repository.exercises
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    fun save(exercise: Exercise) {
+        viewModelScope.launch { repository.save(exercise) }
+    }
+
+    fun delete(exercise: Exercise) {
+        viewModelScope.launch { repository.delete(exercise) }
+    }
 }

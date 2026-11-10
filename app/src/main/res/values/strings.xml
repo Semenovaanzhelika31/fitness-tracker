@@ -5,13 +5,11 @@
     <string name="nav_exercises">Упражнения</string>
     <string name="nav_workout">Тренировка</string>
     <string name="nav_history">История</string>
+    <string name="nav_profile">Профиль</string>
 
     <string name="exercises_title">Список упражнений</string>
-    <string name="exercises_placeholder">Здесь будет список упражнений с описанием, загруженный из сети</string>
-
     <string name="workout_title">Тренировка</string>
     <string name="workout_placeholder">Здесь будет таймер с анимацией и подходы текущей тренировки</string>
-
     <string name="history_title">История тренировок</string>
-    <string name="history_placeholder">Здесь будет история выполненных тренировок</string>
+    <string name="profile_title">Профиль и настройки</string>
 </resources>
